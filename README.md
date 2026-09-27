@@ -1,5 +1,5 @@
 # Ai-complaint-classifier
-# AI Complaint Classifier – ComplainAI
+# AI Complaint Classifier
 
 ## 📌 Project Overview
 
