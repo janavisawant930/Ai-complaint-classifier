@@ -1,0 +1,23 @@
+# Product and Service Quality Policies
+
+## 1. Damaged, Broken, or Defective Products Upon Delivery
+- **Policy**: If an item arrives physically damaged, cracked, broken, or malfunctioning out of the box, the customer is entitled to an immediate 100% free replacement or full refund if reported within 7 days of delivery.
+- **Resolution**:
+  1. Validate complaint and request photo/video evidence of damaged item and outer packaging.
+  2. Initiate return pickup or waive return depending on damage severity.
+  3. Dispatch expedited replacement order at zero extra charge within 24 hours, or process a full refund to original payment method.
+- **Classification Category**: Product/Service
+- **Priority**: High
+- **Typical Confidence**: 94-98%
+
+## 2. Poor Quality, Defective Functionality, and Warranty Claims
+- **Policy**: Products covered under manufacturer or standard 1-year warranty can be repaired or replaced free of charge for hardware defects.
+- **Resolution**: Arrange service technician visit or provide prepaid shipping label for warranty repair/replacement center.
+- **Classification Category**: Product/Service
+- **Priority**: High
+
+## 3. Wrong Item Delivered or Missing Parts / Accessories
+- **Policy**: If the customer receives an item different from ordered or package is missing components/cables/accessories.
+- **Resolution**: Dispatch correct item/missing accessories via priority courier within 24 hours with complimentary return pickup for incorrect items.
+- **Classification Category**: Product/Service
+- **Priority**: High

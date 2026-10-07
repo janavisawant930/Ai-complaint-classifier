@@ -1,0 +1,22 @@
+# Delivery and Shipping Policies
+
+## 1. Delayed Deliveries and Tracking Status
+- **Policy**: Deliveries exceeding the estimated delivery date (EDD) are prioritized with logistics partner.
+- **Resolution**:
+  1. Trigger immediate courier status ping to fetch real-time GPS location.
+  2. If delivery is delayed beyond 3 business days of EDD, offer shipping fee refund and store credit voucher.
+- **Classification Category**: Delivery
+- **Priority**: Medium
+- **Typical Confidence**: 90-95%
+
+## 2. Lost Packages and Non-Delivery
+- **Policy**: If courier tracking shows no scan updates for 5 consecutive days or parcel is marked delivered but not received.
+- **Resolution**: Open lost shipment investigation with carrier. Dispatch free replacement order within 24 hours or issue 100% full refund if replacement is out of stock.
+- **Classification Category**: Delivery
+- **Priority**: Medium
+
+## 3. Delivery to Wrong Address or Courier Issues
+- **Policy**: Packages mistakenly delivered to neighbor or wrong geographical address.
+- **Resolution**: Re-route courier agent for retrieval or issue replacement to customer's verified shipping address.
+- **Classification Category**: Delivery
+- **Priority**: Medium

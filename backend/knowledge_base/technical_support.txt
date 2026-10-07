@@ -1,0 +1,27 @@
+# Technical Support and System Issues
+
+## 1. Login Failures, Password Not Working, and Session Errors
+- **Issue**: User cannot sign in, receives invalid password error, session expired repeatedly, or OTP prompt fails to submit.
+- **Resolution**:
+  1. Verify user credentials and account active status in database.
+  2. If password is not working or forgotten, direct user to use the 'Forgot Password' or 'Reset Password' flow to receive a secure password reset link or OTP.
+  3. Clear browser cache, local storage, and cookies, or try using an incognito window.
+  4. Ensure cookies and JavaScript are enabled.
+- **Classification Category**: Technical Issues
+- **Priority**: Medium
+- **Typical Confidence**: 92-96%
+
+## 2. Application Crashes, Freezing, and Blank Screens
+- **Issue**: Application crashes upon launch, freezes during operations, displays an infinite loading spinner, or renders a blank/white screen.
+- **Resolution**:
+  1. For web: perform hard refresh (Ctrl + F5 or Cmd + Shift + R) and clear browser cache.
+  2. For mobile: force stop the application, clear app cache, and ensure the latest version is installed from the app store.
+  3. Check backend API status and error logs for 500/502/504 errors.
+- **Classification Category**: Technical Issues
+- **Priority**: Medium
+
+## 3. Server Errors, API Timeouts, and Database Glitches
+- **Issue**: System returns "500 Internal Server Error", "API timeout", "Network error", or fails to load complaints dashboard.
+- **Resolution**: Escalate to DevOps/Engineering on-call team for backend health diagnostics, database connection pool review, and server restart if needed.
+- **Classification Category**: Technical Issues
+- **Priority**: High

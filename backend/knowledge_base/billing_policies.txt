@@ -1,0 +1,27 @@
+# Billing and Payment Policies
+
+## 1. Double Charges and Duplicate Transactions
+- **Policy**: If a customer is charged twice or multiple times for the same order, transaction ID, or service period, the duplicate payment is flagged for immediate refund.
+- **Resolution**: An automatic refund for the duplicate transaction is initiated within 24 hours. Funds typically reflect in the customer's original payment method / bank account within 3 to 5 business days.
+- **Customer Action**: Provide transaction reference numbers or bank statement showing duplicate debits.
+- **Classification Category**: Billing
+- **Priority**: High
+- **Typical Confidence**: 95-99%
+
+## 2. Overcharging and Pricing Discrepancies
+- **Policy**: If the billed amount exceeds the displayed checkout price or quotation, the excess amount will be refunded immediately after verifying the order invoice.
+- **Resolution**: Calculate pricing discrepancy, issue an instant credit note or refund to original payment source within 2 business days.
+- **Classification Category**: Billing
+- **Priority**: High
+
+## 3. Subscription Cancellations and Auto-Renewal Refunds
+- **Policy**: Customers may cancel recurring subscriptions at any time. If charged for an automatic renewal without prior notice or within 7 days of renewal date with no usage, a full refund is eligible.
+- **Resolution**: Cancel future recurring billing immediately and process refund for the current cycle.
+- **Classification Category**: Billing
+- **Priority**: Medium
+
+## 4. Payment Gateway and Transaction Failures
+- **Policy**: In cases where money is deducted from the customer's account but the order status shows failed or pending, the payment gateway will auto-reconcile.
+- **Resolution**: Reconcile within 24 to 48 hours. If order cannot be fulfilled, automatic reversal is triggered back to customer's account.
+- **Classification Category**: Billing
+- **Priority**: High

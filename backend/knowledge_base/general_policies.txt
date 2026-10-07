@@ -1,0 +1,14 @@
+# General Inquiries, Feedback, and Other Policies
+
+## 1. General Customer Feedback and Staff Behavior
+- **Policy**: Customer opinions, compliments, service suggestions, store timing questions, or feedback regarding agent conduct.
+- **Resolution**: Acknowledge receipt within 24 hours, route constructive feedback to departmental leads, and log ticket in CRM.
+- **Classification Category**: Other
+- **Priority**: Low
+- **Typical Confidence**: 85-90%
+
+## 2. Policy Clarifications and Miscellaneous Inquiries
+- **Policy**: Inquiries about terms of service, partnership proposals, or general corporate information not falling under Billing, Technical, Delivery, Account, Product, or Fraud.
+- **Resolution**: Provide official FAQ links, standard documentation, or assign to customer relations representative.
+- **Classification Category**: Other
+- **Priority**: Low

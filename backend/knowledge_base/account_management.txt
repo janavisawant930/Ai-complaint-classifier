@@ -1,0 +1,22 @@
+# Account Management and User Profile Policies
+
+## 1. Account Access, Verification, and Profile Details
+- **Policy**: Users have full control over personal information, profile names, phone numbers, and email addresses.
+- **Resolution**:
+  1. For updating email or phone: send 2-Factor authentication OTP to existing contact before updating to new details.
+  2. For KYC verification: documents (ID proof, address proof) are reviewed and approved within 24 to 48 business hours.
+- **Classification Category**: Account
+- **Priority**: Low
+- **Typical Confidence**: 92-96%
+
+## 2. Locked, Deactivated, or Suspended Accounts
+- **Policy**: Accounts locked due to multiple failed password attempts automatically unlock after 30 minutes, or instantly via email unlock link.
+- **Resolution**: Send password reset & account reactivation link to registered email address. If permanently suspended, provide appeal instructions.
+- **Classification Category**: Account
+- **Priority**: Medium
+
+## 3. Account Deletion and GDPR / Data Privacy Requests
+- **Policy**: Users requesting account deletion are placed in a 14-day grace period, after which personal identifiable information is permanently purged.
+- **Resolution**: Confirm deletion request via email and schedule data wipe.
+- **Classification Category**: Account
+- **Priority**: Low

@@ -1,0 +1,26 @@
+# Fraud, Security, and Incident Response Policies
+
+## 1. Unauthorized Charges and Stolen Cards
+- **Policy**: Highest urgency. Any unauthorized debit, card theft, scam, or unrecognized purchase is handled with zero-liability protection.
+- **Resolution**:
+  1. Immediately suspend affected payment cards and freeze compromised account to prevent further unauthorized drain.
+  2. File fraud dispute with banking network and initiate transaction reversal.
+  3. Escalate case to Cybersecurity & Fraud Investigation Unit.
+- **Classification Category**: Fraud/Security
+- **Priority**: High
+- **Typical Confidence**: 96-99%
+
+## 2. Hacked Accounts, Data Breach, and Phishing
+- **Policy**: Customer accounts accessed by unknown third parties or phishing attacks.
+- **Resolution**:
+  1. Terminate all active login sessions and OAuth tokens across all devices.
+  2. Send secure one-time password reset link to user's verified backup email or phone number.
+  3. Enable mandatory Two-Factor Authentication (2FA) for all subsequent logins.
+- **Classification Category**: Fraud/Security
+- **Priority**: High
+
+## 3. Suspicious Identity Theft and Phishing Alerts
+- **Policy**: Reports of fake emails, fraudulent calls pretending to be company representatives, or compromised credentials.
+- **Resolution**: Log IP addresses, notify cybersecurity team, block malicious domains, and advise customer on identity protection measures.
+- **Classification Category**: Fraud/Security
+- **Priority**: High
