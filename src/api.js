@@ -117,6 +117,30 @@ export const api = {
     const res = await fetch(`${API_BASE_URL}/health`);
     return await res.json();
   },
+
+  // 10. Export Complaints to Excel (.xlsx)
+  async exportComplaints(filters = {}) {
+    const params = new URLSearchParams();
+    if (filters.category && filters.category !== "All") params.append("category", filters.category);
+    if (filters.status && filters.status !== "All") params.append("status", filters.status);
+    if (filters.priority && filters.priority !== "All") params.append("priority", filters.priority);
+    if (filters.search) params.append("search", filters.search);
+    if (filters.sortBy) params.append("sort", filters.sortBy);
+
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const res = await fetch(`${API_BASE_URL}/complaints/export${query}`);
+    if (!res.ok) {
+      let errorMessage = "Failed to export complaints to Excel.";
+      try {
+        const data = await res.json();
+        if (data && data.error) errorMessage = data.error;
+      } catch {
+        // ignore if not json
+      }
+      throw new Error(errorMessage);
+    }
+    return await res.blob();
+  },
 };
 
 export default api;

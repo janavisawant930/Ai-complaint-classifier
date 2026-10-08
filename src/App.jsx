@@ -182,6 +182,7 @@ function App() {
 
   const [aiResult, setAiResult] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
 
   // Helper toast notification
@@ -190,6 +191,38 @@ function App() {
     setTimeout(() => {
       setToastMessage(null);
     }, 3200);
+  };
+
+  // Export complaints to Excel (.xlsx)
+  const handleExportExcel = async () => {
+    try {
+      setIsExporting(true);
+      showToast("Generating Excel report...");
+      const blob = await api.exportComplaints({
+        category: categoryFilter,
+        status: statusFilter,
+        priority: priorityFilter,
+        search: search,
+        sortBy: sortBy,
+      });
+
+      // Create download link and trigger automatic browser download
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "complaints_report.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      showToast("Complaints report downloaded successfully!");
+    } catch (err) {
+      console.error("Export Excel error:", err);
+      showToast(`Export failed: ${err.message}`);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const handleLogin = (user, remember) => {
@@ -547,6 +580,8 @@ function App() {
             setStatusFilter={setStatusFilter}
             setPriorityFilter={setPriorityFilter}
             setCategoryFilter={setCategoryFilter}
+            handleExportExcel={handleExportExcel}
+            isExporting={isExporting}
           />
         )}
 
@@ -578,6 +613,8 @@ function App() {
             totalComplaintsCount={complaints.length}
             updateStatus={updateStatus}
             setSelectedComplaint={setSelectedComplaint}
+            handleExportExcel={handleExportExcel}
+            isExporting={isExporting}
           />
         )}
 
@@ -627,6 +664,8 @@ function Dashboard({
   setStatusFilter,
   setPriorityFilter,
   setCategoryFilter,
+  handleExportExcel,
+  isExporting,
 }) {
   return (
     <div className="page">
@@ -702,15 +741,29 @@ function Dashboard({
           <p>Latest customer complaints and AI classifications (Click to inspect)</p>
         </div>
 
-        <button
-          className="outline-btn"
-          onClick={() => {
-            handleResetFilters();
-            setActiveTab("complaints");
-          }}
-        >
-          View All Complaints →
-        </button>
+        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          {handleExportExcel && (
+            <button
+              className="export-btn outline-export-btn"
+              onClick={handleExportExcel}
+              disabled={isExporting}
+              title="Export all complaints to Excel (.xlsx)"
+            >
+              <span>{isExporting ? "⌛" : "⤓"}</span>
+              {isExporting ? "Exporting..." : "Export to Excel"}
+            </button>
+          )}
+
+          <button
+            className="outline-btn"
+            onClick={() => {
+              handleResetFilters();
+              setActiveTab("complaints");
+            }}
+          >
+            View All Complaints →
+          </button>
+        </div>
       </div>
 
       <div className="table-card">
@@ -1148,6 +1201,8 @@ function ComplaintsTable({
   totalComplaintsCount,
   updateStatus,
   setSelectedComplaint,
+  handleExportExcel,
+  isExporting,
 }) {
   return (
     <div className="page">
@@ -1229,6 +1284,19 @@ function ComplaintsTable({
             title="Clear all active filters"
           >
             ⟲ Reset Filters
+          </button>
+        )}
+
+        {/* Export to Excel Button */}
+        {handleExportExcel && (
+          <button
+            className="export-btn"
+            onClick={handleExportExcel}
+            disabled={isExporting}
+            title="Export complaints to Excel (.xlsx)"
+          >
+            <span>{isExporting ? "⌛" : "⤓"}</span>
+            {isExporting ? "Exporting..." : "Export to Excel"}
           </button>
         )}
       </div>

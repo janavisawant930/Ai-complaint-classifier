@@ -977,6 +977,50 @@ tbody tr:hover {
   background: #f7f8fb;
 }
 
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #10b981;
+  color: white;
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.export-btn:hover:not(:disabled) {
+  background: #059669;
+  border-color: #059669;
+  transform: translateY(-1px);
+}
+
+.export-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.export-btn span {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.outline-export-btn {
+  background: white;
+  color: #10b981;
+  border: 1px solid #10b981;
+}
+
+.outline-export-btn:hover:not(:disabled) {
+  background: #eafbf4;
+  color: #059669;
+  border-color: #059669;
+}
+
 .full-table {
   overflow-x: auto;
 }

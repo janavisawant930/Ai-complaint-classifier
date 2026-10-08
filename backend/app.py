@@ -1,9 +1,13 @@
+import io
 import os
 import re
 from datetime import datetime
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.utils import get_column_letter
 
 from config import Config
 from database import init_db, query_db, execute_db, get_db_connection
@@ -55,6 +59,7 @@ def index():
             "auth_signup": "POST /api/auth/signup",
             "auth_signin": "POST /api/auth/signin",
             "get_complaints": "GET /api/complaints",
+            "export_complaints": "GET /api/complaints/export",
             "submit_complaint": "POST /api/complaints",
             "get_complaint": "GET /api/complaints/<id>",
             "update_status": "PATCH /api/complaints/<id>/status",
@@ -373,6 +378,182 @@ def get_complaints():
 
     except Exception as e:
         return jsonify({"success": False, "error": f"Failed to fetch complaints: {str(e)}"}), 500
+
+# ----------------------------------------------------
+# 5b. Export Complaints to Excel (.xlsx) using OpenPyXL
+# ----------------------------------------------------
+@app.route("/api/complaints/export", methods=["GET"])
+@app.route("/api/export", methods=["GET"])
+def export_complaints():
+    category = request.args.get("category")
+    status = request.args.get("status")
+    priority = request.args.get("priority")
+    search = request.args.get("search", "").strip()
+    sort_by = request.args.get("sort", "newest")
+
+    try:
+        sql = "SELECT * FROM complaints WHERE 1=1"
+        params = []
+
+        if category and category != "All":
+            sql += " AND category = %s"
+            params.append(category)
+
+        if status and status != "All":
+            sql += " AND status = %s"
+            params.append(status)
+
+        if priority and priority != "All":
+            sql += " AND priority = %s"
+            params.append(priority)
+
+        if search:
+            search_pattern = f"%{search}%"
+            sql += " AND (id LIKE %s OR user LIKE %s OR title LIKE %s OR description LIKE %s OR category LIKE %s OR priority LIKE %s)"
+            params.extend([search_pattern] * 6)
+
+        if sort_by == "confidence-high":
+            sql += " ORDER BY confidence DESC"
+        elif sort_by == "confidence-low":
+            sql += " ORDER BY confidence ASC"
+        elif sort_by == "oldest":
+            sql += " ORDER BY created_at ASC, id ASC"
+        else:
+            # Default newest
+            sql += " ORDER BY created_at DESC, id DESC"
+
+        complaints_raw = query_db(sql, params) or []
+
+        # Initialize OpenPyXL workbook
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Complaints Report"
+
+        # Ensure Excel gridlines are shown
+        ws.views.sheetView[0].showGridLines = True
+
+        # Header list
+        headers = [
+            "Complaint ID",
+            "User",
+            "Complaint Title",
+            "Complaint Description",
+            "AI Category",
+            "Priority",
+            "Confidence (%)",
+            "Status",
+            "Date",
+            "Created At"
+        ]
+
+        # Professional styling definitions
+        header_font = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
+        header_fill = PatternFill(start_color="4F46E5", end_color="4F46E5", fill_type="solid")
+        header_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
+        thin_border_side = Side(border_style="thin", color="D1D5DB")
+        border = Border(
+            left=thin_border_side,
+            right=thin_border_side,
+            top=thin_border_side,
+            bottom=thin_border_side
+        )
+
+        # Write header row
+        ws.append(headers)
+        ws.row_dimensions[1].height = 28
+
+        for col_num in range(1, len(headers) + 1):
+            cell = ws.cell(row=1, column=col_num)
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = header_alignment
+            cell.border = border
+
+        # Fonts & alignments for data rows
+        row_font = Font(name="Calibri", size=10)
+        align_left = Alignment(horizontal="left", vertical="center")
+        align_center = Alignment(horizontal="center", vertical="center")
+        align_desc = Alignment(horizontal="left", vertical="top", wrap_text=True)
+
+        # Write complaint rows
+        for row_idx, c in enumerate(complaints_raw, start=2):
+            desc = c.get("description") or c.get("complaint") or ""
+            title = c.get("title") or (desc[:40] + "..." if len(desc) > 40 else desc)
+            conf = int(c.get("confidence") or 0)
+            created_at_val = str(c.get("created_at")) if c.get("created_at") else ""
+
+            row_data = [
+                c.get("id") or "",
+                c.get("user") or "",
+                title,
+                desc,
+                c.get("category") or "",
+                c.get("priority") or "",
+                conf,
+                c.get("status") or "Pending",
+                c.get("date") or "",
+                created_at_val
+            ]
+            ws.append(row_data)
+            ws.row_dimensions[row_idx].height = 22
+
+            # Apply cell styles
+            for col_idx in range(1, len(row_data) + 1):
+                cell = ws.cell(row=row_idx, column=col_idx)
+                cell.font = row_font
+                cell.border = border
+
+                if col_idx in (1, 5, 6, 7, 8, 9, 10):
+                    cell.alignment = align_center
+                elif col_idx == 4:
+                    cell.alignment = align_desc
+                else:
+                    cell.alignment = align_left
+
+        # Adjust column widths based on contents with sensible limits
+        col_width_constraints = {
+            1: (15, 20),   # ID
+            2: (16, 26),   # User
+            3: (22, 36),   # Title
+            4: (30, 55),   # Description
+            5: (18, 26),   # Category
+            6: (12, 18),   # Priority
+            7: (15, 18),   # Confidence
+            8: (14, 18),   # Status
+            9: (14, 20),   # Date
+            10: (20, 24),  # Created At
+        }
+
+        for col_idx, col in enumerate(ws.columns, start=1):
+            min_w, max_w = col_width_constraints.get(col_idx, (12, 30))
+            max_len = 0
+            for cell in col:
+                val_str = str(cell.value or "")
+                if "\n" in val_str:
+                    lines = val_str.split("\n")
+                    max_len = max(max_len, max(len(l) for l in lines))
+                else:
+                    max_len = max(max_len, len(val_str))
+            calculated_width = max(min_w, min(max_len + 3, max_w))
+            col_letter = get_column_letter(col_idx)
+            ws.column_dimensions[col_letter].width = calculated_width
+
+        # Save to in-memory bytes stream
+        output = io.BytesIO()
+        wb.save(output)
+        output.seek(0)
+
+        filename = "complaints_report.xlsx"
+        return send_file(
+            output,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            as_attachment=True,
+            download_name=filename
+        )
+
+    except Exception as e:
+        return jsonify({"success": False, "error": f"Failed to export complaints to Excel: {str(e)}"}), 500
 
 # ----------------------------------------------------
 # 6. Get Single Complaint
